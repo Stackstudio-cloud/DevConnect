@@ -14,10 +14,19 @@ if (!process.env.REPLIT_DOMAINS) {
 
 const getOidcConfig = memoize(
   async () => {
-    return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID!
-    );
+    try {
+      const issuerUrl = process.env.ISSUER_URL ?? "https://replit.com/oidc";
+      console.log(`[auth] Discovering OIDC config from ${issuerUrl}`);
+      const config = await client.discovery(
+        new URL(issuerUrl),
+        process.env.REPL_ID!
+      );
+      console.log(`[auth] OIDC config discovered successfully`);
+      return config;
+    } catch (error) {
+      console.error(`[auth] Failed to discover OIDC config:`, error);
+      throw error;
+    }
   },
   { maxAge: 3600 * 1000 }
 );
@@ -27,7 +36,7 @@ export function getSession() {
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
+    createTableIfMissing: true,
     ttl: sessionTtl,
     tableName: "sessions",
   });
@@ -38,7 +47,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: false, // Set to false for development
       maxAge: sessionTtl,
     },
   });
@@ -67,6 +76,7 @@ async function upsertUser(
 }
 
 export async function setupAuth(app: Express) {
+  console.log(`[auth] Setting up authentication`);
   app.set("trust proxy", 1);
   app.use(getSession());
   app.use(passport.initialize());
@@ -78,38 +88,56 @@ export async function setupAuth(app: Express) {
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
-    const user = {};
-    updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
-    verified(null, user);
+    try {
+      console.log(`[auth] Verifying user with tokens`);
+      const user = {};
+      updateUserSession(user, tokens);
+      await upsertUser(tokens.claims());
+      console.log(`[auth] User verified successfully:`, tokens.claims()?.sub);
+      verified(null, user);
+    } catch (error) {
+      console.error(`[auth] Error during verification:`, error);
+      verified(error);
+    }
   };
 
-  for (const domain of process.env
-    .REPLIT_DOMAINS!.split(",")) {
+  // Get domains and add localhost for development
+  const domains = process.env.REPLIT_DOMAINS!.split(",");
+  if (process.env.NODE_ENV === "development") {
+    domains.push("localhost:5000");
+  }
+
+  for (const domain of domains) {
+    const protocol = domain.includes("localhost") ? "http" : "https";
     const strategy = new Strategy(
       {
         name: `replitauth:${domain}`,
         config,
         scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`,
+        callbackURL: `${protocol}://${domain}/api/callback`,
       },
       verify,
     );
     passport.use(strategy);
+    console.log(`[auth] Registered strategy for domain: ${domain}`);
   }
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    const hostname = req.get('host') || req.hostname;
+    console.log(`[auth] Login attempt from ${hostname}`);
+    passport.authenticate(`replitauth:${hostname}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
     })(req, res, next);
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    const hostname = req.get('host') || req.hostname;
+    console.log(`[auth] Callback received from ${hostname}`, req.query);
+    passport.authenticate(`replitauth:${hostname}`, {
       successReturnToOrRedirect: "/",
       failureRedirect: "/api/login",
     })(req, res, next);
