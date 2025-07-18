@@ -15,7 +15,7 @@ export default function Discover() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-2xl min-h-screen relative overflow-hidden">
+    <div className="max-w-md mx-auto bg-gray-50 shadow-2xl min-h-screen relative overflow-hidden">
       <NavigationHeader 
         cardType={cardType}
         onCardTypeChange={setCardType}

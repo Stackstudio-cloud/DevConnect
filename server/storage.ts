@@ -160,12 +160,104 @@ export class DatabaseStorage implements IStorage {
 
   // Tool profile operations
   async getToolProfiles(limit = 50): Promise<ToolProfile[]> {
-    return await db
+    const tools = await db
       .select()
       .from(toolProfiles)
       .where(eq(toolProfiles.isActive, true))
       .limit(limit)
       .orderBy(desc(toolProfiles.popularity));
+    
+    // If no tools exist, create some sample data
+    if (tools.length === 0) {
+      await this.createSampleTools();
+      return await db
+        .select()
+        .from(toolProfiles)
+        .where(eq(toolProfiles.isActive, true))
+        .limit(limit)
+        .orderBy(desc(toolProfiles.popularity));
+    }
+    
+    return tools;
+  }
+
+  private async createSampleTools(): Promise<void> {
+    const sampleTools = [
+      {
+        name: "VS Code",
+        category: "ide",
+        description: "Visual Studio Code is a lightweight but powerful source code editor with rich extension ecosystem and debugging capabilities.",
+        logoUrl: "https://code.visualstudio.com/assets/images/code-stable.png",
+        websiteUrl: "https://code.visualstudio.com",
+        integrations: ["Git", "Docker", "TypeScript", "Python", "React"],
+        platforms: ["Windows", "macOS", "Linux"],
+        pricing: "free",
+        tags: ["IntelliSense", "Debugging", "Extensions", "Terminal"],
+        popularity: 95
+      },
+      {
+        name: "Docker",
+        category: "containerization",
+        description: "Platform for developing, shipping, and running applications using containerization technology.",
+        logoUrl: "https://www.docker.com/sites/default/files/d8/2019-07/vertical-logo-monochromatic.png",
+        websiteUrl: "https://www.docker.com",
+        integrations: ["Kubernetes", "AWS", "Azure", "Jenkins"],
+        platforms: ["Windows", "macOS", "Linux"],
+        pricing: "freemium",
+        tags: ["Containers", "Microservices", "DevOps", "Cloud"],
+        popularity: 88
+      },
+      {
+        name: "Figma",
+        category: "design",
+        description: "Collaborative interface design tool with real-time editing and prototyping capabilities.",
+        logoUrl: "https://cdn.worldvectorlogo.com/logos/figma-1.svg",
+        websiteUrl: "https://www.figma.com",
+        integrations: ["Slack", "Notion", "Zeplin", "Adobe"],
+        platforms: ["Web", "Desktop", "Mobile"],
+        pricing: "freemium",
+        tags: ["UI Design", "Prototyping", "Collaboration", "Vector"],
+        popularity: 82
+      },
+      {
+        name: "GitHub",
+        category: "version_control",
+        description: "Web-based Git repository hosting service with collaboration features and CI/CD capabilities.",
+        logoUrl: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        websiteUrl: "https://github.com",
+        integrations: ["VS Code", "Slack", "Jira", "Docker"],
+        platforms: ["Web", "Desktop", "Mobile"],
+        pricing: "freemium",
+        tags: ["Git", "Collaboration", "CI/CD", "Open Source"],
+        popularity: 93
+      },
+      {
+        name: "Notion",
+        category: "productivity",
+        description: "All-in-one workspace for notes, tasks, wikis, and databases with powerful collaboration features.",
+        logoUrl: "https://www.notion.so/cdn-cgi/image/format=auto,width=256,quality=100/front-static/shared/icons/notion-app-icon-3d.png",
+        websiteUrl: "https://www.notion.so",
+        integrations: ["Slack", "Google Drive", "Figma", "GitHub"],
+        platforms: ["Web", "Desktop", "Mobile"],
+        pricing: "freemium",
+        tags: ["Documentation", "Project Management", "Collaboration"],
+        popularity: 79
+      },
+      {
+        name: "PostgreSQL",
+        category: "database",
+        description: "Advanced open-source relational database with strong standards compliance and extensibility.",
+        logoUrl: "https://www.postgresql.org/media/img/about/press/elephant.png",
+        websiteUrl: "https://www.postgresql.org",
+        integrations: ["Docker", "AWS RDS", "Heroku", "Node.js"],
+        platforms: ["Linux", "Windows", "macOS"],
+        pricing: "free",
+        tags: ["SQL", "ACID", "JSON", "Extensions"],
+        popularity: 85
+      }
+    ];
+
+    await db.insert(toolProfiles).values(sampleTools);
   }
 
   async getToolProfile(id: number): Promise<ToolProfile | undefined> {

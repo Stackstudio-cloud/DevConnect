@@ -57,10 +57,10 @@ export default function ProfileDetailModal({
           </div>
 
           <ScrollArea className="flex-1">
-            <div className="p-4">
-              {/* Profile Header */}
-              <div className="relative mb-6">
-                <div className="w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl overflow-hidden">
+            <div className="p-6">
+              {/* Profile Header - Larger and more impactful */}
+              <div className="relative mb-8">
+                <div className="w-full h-72 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 rounded-2xl overflow-hidden shadow-2xl">
                   {type === "developers" && profile?.user?.profileImageUrl ? (
                     <img 
                       src={profile.user.profileImageUrl} 
@@ -69,23 +69,85 @@ export default function ProfileDetailModal({
                     />
                   ) : type === "tools" && profile?.logoUrl ? (
                     <div className="flex items-center justify-center h-full">
-                      <img 
-                        src={profile.logoUrl} 
-                        alt={profile.name}
-                        className="w-20 h-20 object-contain"
-                      />
+                      <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8">
+                        <img 
+                          src={profile.logoUrl} 
+                          alt={profile.name}
+                          className="w-32 h-32 object-contain drop-shadow-lg"
+                        />
+                      </div>
                     </div>
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white text-6xl font-bold">
+                    <div className="w-full h-full flex items-center justify-center text-white text-8xl font-bold">
                       {displayName[0]?.toUpperCase()}
                     </div>
                   )}
+                  
+                  {/* Enhanced gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                  
+                  {/* Status badges for developers */}
+                  {type === "developers" && (
+                    <div className="absolute top-4 right-4 flex flex-col gap-2">
+                      <Badge className={`text-sm font-semibold shadow-lg ${
+                        profile?.availability === "available" ? "bg-emerald-500 text-white" : 
+                        profile?.availability === "busy" ? "bg-amber-500 text-white" : "bg-red-500 text-white"
+                      }`}>
+                        {profile?.availability === "available" ? "🟢 Available" : 
+                         profile?.availability === "busy" ? "🟡 Busy" : "🔴 Not Seeking"}
+                      </Badge>
+                      {profile?.remote && (
+                        <Badge variant="secondary" className="bg-white/95 text-gray-800 font-medium shadow-lg">
+                          🌍 Remote OK
+                        </Badge>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Tool badges */}
+                  {type === "tools" && (
+                    <div className="absolute top-4 right-4 flex flex-col gap-2">
+                      <Badge className={`text-sm font-semibold shadow-lg ${
+                        profile?.pricing === "free" ? "bg-emerald-500 text-white" : 
+                        profile?.pricing === "paid" ? "bg-red-500 text-white" : "bg-blue-500 text-white"
+                      }`}>
+                        {profile?.pricing?.charAt(0).toUpperCase() + profile?.pricing?.slice(1) || "Free"}
+                      </Badge>
+                      {profile?.platforms && (
+                        <Badge variant="secondary" className="bg-white/95 text-gray-800 font-medium shadow-lg">
+                          📱 {profile.platforms[0]}
+                        </Badge>
+                      )}
+                    </div>
+                  )}
                 </div>
-                <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-2xl font-bold">{displayName}</h3>
-                  <p className="text-lg opacity-90">
-                    {type === "developers" ? profile?.title : profile?.category}
-                  </p>
+                
+                {/* Enhanced profile info overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <h3 className="text-3xl font-bold mb-2 drop-shadow-lg">{displayName}</h3>
+                      <p className="text-xl opacity-90 drop-shadow-lg">
+                        {type === "developers" ? profile?.title : profile?.category}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                        <span className="text-lg font-bold">
+                          {type === "developers" ? (
+                            profile?.experience === "junior" ? "Jr Dev" :
+                            profile?.experience === "mid" ? "Mid Level" :
+                            profile?.experience === "senior" ? "Senior" : "Lead"
+                          ) : (
+                            <div className="flex items-center">
+                              <Star className="w-4 h-4 mr-1 text-yellow-300" />
+                              {profile?.popularity || 0}
+                            </div>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

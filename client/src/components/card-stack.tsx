@@ -124,13 +124,13 @@ export default function CardStack({ cardType, onMatch }: CardStackProps) {
 
   return (
     <>
-      <div className="relative h-96 p-4" style={{ perspective: "1000px" }}>
-        {/* Background Cards (for stack effect) */}
+      <div className="relative h-[500px] p-4" style={{ perspective: "1000px" }}>
+        {/* Background Cards (for stack effect) - Enhanced */}
         {backgroundItem && (
-          <div className="absolute inset-4 bg-gray-200 rounded-2xl opacity-30 transform scale-95" />
+          <div className="absolute inset-4 bg-gradient-to-br from-gray-200 to-gray-300 rounded-3xl opacity-40 transform scale-95 shadow-lg" />
         )}
         {nextItem && (
-          <div className="absolute inset-4 bg-gray-300 rounded-2xl opacity-50 transform scale-97" />
+          <div className="absolute inset-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl opacity-60 transform scale-[0.97] shadow-xl" />
         )}
         
         {/* Active Card */}

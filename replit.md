@@ -7,6 +7,18 @@ DevMatch is a Tinder-like application for developers to find collaboration partn
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Design preference: Profiles should be more prominent in the design with enhanced visual impact.
+
+## Recent Changes
+
+### January 18, 2025 - Enhanced Profile Prominence
+- Redesigned profile cards with larger images (h-64 vs h-48), enhanced gradients, and more prominent name/title overlays
+- Added colorful skill badges with different colors for visual variety
+- Enhanced tool cards with larger logos, better spacing, and more prominent information display
+- Improved profile detail modals with larger headers (h-72) and enhanced visual hierarchy
+- Updated card stack height to h-[500px] for better profile showcase
+- Changed discover page background to gray-50 for better card contrast
+- Added sample tool data including VS Code, Docker, Figma, GitHub, Notion, and PostgreSQL
 
 ## System Architecture
 
