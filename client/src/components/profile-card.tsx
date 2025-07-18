@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, Users } from "lucide-react";
+import ActivityIndicator from "./activity-indicator";
 
 interface ProfileCardProps {
   profile: any;
@@ -35,6 +36,12 @@ export default function ProfileCard({ profile, onTap }: ProfileCardProps) {
         
         {/* Status badges - more prominent */}
         <div className="absolute top-4 right-4 flex flex-col gap-2">
+          <ActivityIndicator
+            lastActive={profile?.user?.updatedAt}
+            isNewUser={profile?.user?.createdAt && 
+              new Date(profile.user.createdAt).getTime() > Date.now() - (7 * 24 * 60 * 60 * 1000)}
+            activityLevel={profile?.availability === "available" ? "high" : "medium"}
+          />
           <Badge className={`text-sm font-semibold shadow-lg ${
             profile?.availability === "available" ? "bg-emerald-500 text-white" : 
             profile?.availability === "busy" ? "bg-amber-500 text-white" : "bg-red-500 text-white"

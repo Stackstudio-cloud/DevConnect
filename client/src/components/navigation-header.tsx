@@ -1,21 +1,38 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, User } from "lucide-react";
+import { Heart, User, Filter, RotateCcw } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import FilterModal, { type FilterOptions } from "./filter-modal";
 
 interface NavigationHeaderProps {
   title?: string;
   cardType?: "developers" | "tools";
   onCardTypeChange?: (type: "developers" | "tools") => void;
+  onFiltersChange?: (filters: FilterOptions) => void;
+  onUndoLastSwipe?: () => void;
 }
 
 export default function NavigationHeader({ 
   title, 
   cardType = "developers", 
-  onCardTypeChange 
+  onCardTypeChange,
+  onFiltersChange,
+  onUndoLastSwipe
 }: NavigationHeaderProps) {
   const { user } = useAuth();
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<FilterOptions>({
+    skills: [],
+    experience: [],
+    availability: [],
+    remote: false,
+    location: "",
+    popularityRange: [0, 100],
+    categories: []
+  });
   
   const { data: matches } = useQuery({
     queryKey: ["/api/matches"],
@@ -66,18 +83,49 @@ export default function NavigationHeader({
           <p className="text-xs opacity-80">Find your coding partner</p>
         </div>
         
-        <Button
-          variant="ghost"
-          size="sm"
-          className="p-2 hover:bg-white/20 rounded-lg transition-colors relative"
-        >
-          <Heart className="w-5 h-5" />
-          {matchCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-emerald-500 text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-              {matchCount}
-            </span>
+        <div className="flex items-center gap-2">
+          {onUndoLastSwipe && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onUndoLastSwipe}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors text-white"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </Button>
           )}
-        </Button>
+          {onFiltersChange && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowFilterModal(true)}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors text-white relative"
+            >
+              <Filter className="w-4 h-4" />
+              {(currentFilters.skills.length + currentFilters.experience.length + 
+                currentFilters.availability.length + currentFilters.categories.length +
+                (currentFilters.remote ? 1 : 0)) > 0 && (
+                <span className="absolute -top-1 -right-1 bg-emerald-500 text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
+                  {currentFilters.skills.length + currentFilters.experience.length + 
+                   currentFilters.availability.length + currentFilters.categories.length +
+                   (currentFilters.remote ? 1 : 0)}
+                </span>
+              )}
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors relative"
+          >
+            <Heart className="w-5 h-5" />
+            {matchCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-emerald-500 text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                {matchCount}
+              </span>
+            )}
+          </Button>
+        </div>
       </div>
       
       {onCardTypeChange && (
@@ -110,6 +158,16 @@ export default function NavigationHeader({
           </div>
         </div>
       )}
+      
+      <FilterModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        onApplyFilters={(filters) => {
+          setCurrentFilters(filters);
+          onFiltersChange?.(filters);
+        }}
+        currentFilters={currentFilters}
+      />
     </header>
   );
 }
