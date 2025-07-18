@@ -122,8 +122,14 @@ export async function setupAuth(app: Express) {
     console.log(`[auth] Registered strategy for domain: ${domain}`);
   }
 
-  passport.serializeUser((user: Express.User, cb) => cb(null, user));
-  passport.deserializeUser((user: Express.User, cb) => cb(null, user));
+  passport.serializeUser((user: Express.User, cb) => {
+    console.log(`[auth] Serializing user`);
+    cb(null, user);
+  });
+  passport.deserializeUser((user: Express.User, cb) => {
+    console.log(`[auth] Deserializing user`);
+    cb(null, user);
+  });
 
   app.get("/api/login", (req, res, next) => {
     const hostname = req.get('host') || req.hostname;
@@ -137,9 +143,23 @@ export async function setupAuth(app: Express) {
   app.get("/api/callback", (req, res, next) => {
     const hostname = req.get('host') || req.hostname;
     console.log(`[auth] Callback received from ${hostname}`, req.query);
-    passport.authenticate(`replitauth:${hostname}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/api/login",
+    passport.authenticate(`replitauth:${hostname}`, (err, user, info) => {
+      if (err) {
+        console.error(`[auth] Callback error:`, err);
+        return res.redirect("/api/login");
+      }
+      if (!user) {
+        console.log(`[auth] No user returned:`, info);
+        return res.redirect("/api/login");
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error(`[auth] Login error:`, err);
+          return res.redirect("/api/login");
+        }
+        console.log(`[auth] User logged in successfully`);
+        return res.redirect("/");
+      });
     })(req, res, next);
   });
 
