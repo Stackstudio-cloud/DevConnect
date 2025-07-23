@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![DevConnect Screenshot](attached_assets/image_1753234085929.png)
+![DevConnect Screenshot](attached_assets/image_1753235055931.png)
 
 **Connect, collaborate, and build amazing projects with developers worldwide**
 
@@ -21,7 +21,7 @@
 DevConnect is a **cutting-edge developer collaboration platform** that combines the intuitive swipe-based matching of modern dating apps with powerful AI-driven recommendations to connect developers, foster team formation, and accelerate project success.
 
 <div align="center">
-<img src="attached_assets/image_1753234085929.png" alt="DevConnect Landing Page" width="600" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);"/>
+<img src="attached_assets/image_1753235055931.png" alt="DevConnect Landing Page" width="600" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);"/>
 
 *Beautiful, intuitive interface designed for developers*
 </div>
