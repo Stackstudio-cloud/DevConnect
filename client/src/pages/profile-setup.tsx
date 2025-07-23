@@ -68,7 +68,7 @@ export default function ProfileSetup() {
       queryClient.invalidateQueries({ queryKey: ["/api/profile"] });
       toast({
         title: "Profile created!",
-        description: "Welcome to DevMatch. Let's find your coding partner!",
+        description: "Welcome to DevConnect. Let's find your coding partner!",
       });
       setLocation("/discover");
     },

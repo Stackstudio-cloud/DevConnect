@@ -79,7 +79,7 @@ export default function NavigationHeader({
         </Button>
         
         <div className="text-center">
-          <h1 className="text-xl font-bold">DevMatch</h1>
+          <h1 className="text-xl font-bold">DevConnect</h1>
           <p className="text-xs opacity-80">Find your coding partner</p>
         </div>
         

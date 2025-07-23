@@ -105,7 +105,7 @@ export default function PWAInstaller() {
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-semibold text-blue-900">Install DevMatch</h4>
+              <h4 className="font-semibold text-blue-900">Install DevConnect</h4>
               <Badge variant="secondary" className="text-xs">
                 {deviceType === 'mobile' ? 'Mobile App' : 'Desktop App'}
               </Badge>
