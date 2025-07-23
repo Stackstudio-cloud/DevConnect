@@ -3,6 +3,8 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupGitHubAuth } from "./githubAuth";
+import { setupTwitterAuth } from "./twitterAuth";
 import {
   insertDeveloperProfileSchema,
   insertProjectSchema,
@@ -13,6 +15,28 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+  setupGitHubAuth();
+  setupTwitterAuth();
+
+  // GitHub Auth routes
+  app.get('/api/auth/github', (req, res, next) => {
+    // Redirect to placeholder page for GitHub auth setup
+    res.redirect('/?auth_demo=github');
+  });
+
+  app.get('/api/auth/github/callback', (req, res) => {
+    res.redirect('/?auth_demo=github_callback');
+  });
+
+  // Twitter Auth routes  
+  app.get('/api/auth/twitter', (req, res, next) => {
+    // Redirect to placeholder page for Twitter auth setup
+    res.redirect('/?auth_demo=twitter');
+  });
+
+  app.get('/api/auth/twitter/callback', (req, res) => {
+    res.redirect('/?auth_demo=twitter_callback');
+  });
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
