@@ -2,7 +2,7 @@
   "name": "DevConnect - Developer Collaboration Platform",
   "short_name": "DevConnect",
   "description": "Find, connect, and collaborate with developers worldwide",
-  "start_url": "/",
+  "start_url": "https://devconnect.one/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#6366f1",

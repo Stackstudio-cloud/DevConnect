@@ -6,11 +6,11 @@
 
 **Connect, collaborate, and build amazing projects with developers worldwide**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available-success?style=for-the-badge)](https://devconnect.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available-success?style=for-the-badge)](https://devconnect.one)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-100%25-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
-[🚀 Live Demo](https://devconnect.app) • [📖 Documentation](docs/) • [💡 Features](#features) • [🛠️ Tech Stack](#tech-stack)
+[🚀 Live Demo](https://devconnect.one) • [📖 Documentation](docs/) • [💡 Features](#features) • [🛠️ Tech Stack](#tech-stack)
 
 </div>
 
@@ -249,10 +249,10 @@ This project is licensed under the [MIT License](LICENSE) - see the LICENSE file
 
 ## 📞 Support
 
-- **Documentation**: [docs.devconnect.app](https://docs.devconnect.app)
+- **Documentation**: [docs.devconnect.one](https://docs.devconnect.one)
 - **Issues**: [GitHub Issues](https://github.com/your-username/devconnect/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/your-username/devconnect/discussions)
-- **Email**: support@devconnect.app
+- **Email**: support@devconnect.one
 
 ---
 

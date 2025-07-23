@@ -158,7 +158,7 @@ Contributors will be:
 
 - **Discord**: [Join our community](https://discord.gg/devconnect)
 - **GitHub Discussions**: [Ask questions](https://github.com/your-username/devconnect/discussions)
-- **Email**: contributors@devconnect.app
+- **Email**: contributors@devconnect.one
 
 ## 📄 License
 
