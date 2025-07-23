@@ -1,0 +1,462 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevMatch - Developer Collaboration Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366F1',
+                        secondary: '#8B5CF6',
+                        accent: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444'
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .card-stack { perspective: 1000px; }
+        .card { transition: transform 0.3s ease, opacity 0.3s ease; }
+        .card:hover { transform: translateY(-4px); }
+        .swipe-indicator { transition: opacity 0.2s ease; }
+        .gradient-bg { background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- @COMPONENT: AppContainer -->
+    <div class="max-w-md mx-auto bg-white shadow-2xl min-h-screen relative overflow-hidden">
+        
+        <!-- Navigation Header -->
+        <!-- @COMPONENT: NavigationHeader -->
+        <header class="gradient-bg p-4 text-white relative">
+            <div class="flex items-center justify-between">
+                <button class="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                    <i class="fas fa-user-circle text-xl"></i>
+                </button>
+                <div class="text-center">
+                    <h1 class="text-xl font-bold">DevMatch</h1>
+                    <p class="text-xs opacity-80">Find your coding partner</p>
+                </div>
+                <button class="p-2 hover:bg-white/20 rounded-lg transition-colors relative">
+                    <i class="fas fa-heart text-xl"></i>
+                    <span class="absolute -top-1 -right-1 bg-accent text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium" data-bind="matchCount">3</span>
+                </button>
+            </div>
+            
+            <!-- Filter Toggle -->
+            <div class="flex justify-center mt-3">
+                <div class="bg-white/20 rounded-full p-1 flex">
+                    <button class="px-4 py-2 rounded-full bg-white text-primary text-sm font-medium transition-colors" data-state="active">
+                        Developers
+                    </button>
+                    <button class="px-4 py-2 rounded-full text-white text-sm font-medium hover:bg-white/20 transition-colors">
+                        Tools & Apps
+                    </button>
+                </div>
+            </div>
+        </header>
+        <!-- @END_COMPONENT: NavigationHeader -->
+
+        <!-- Main Card Stack Area -->
+        <!-- @COMPONENT: CardStack -->
+        <div class="card-stack relative h-96 p-4">
+            <!-- Background Cards (for stack effect) -->
+            <div class="absolute inset-4 bg-gray-200 rounded-2xl opacity-30 transform scale-95"></div>
+            <div class="absolute inset-4 bg-gray-300 rounded-2xl opacity-50 transform scale-97"></div>
+            
+            <!-- Active Card -->
+            <div class="card absolute inset-4 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <!-- Profile Image -->
+                <!-- A professional developer workspace with multiple monitors and code -->
+                <div class="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" 
+                         alt="Developer workspace setup" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute top-3 right-3 flex gap-2">
+                        <span class="bg-accent text-white text-xs px-2 py-1 rounded-full font-medium">Available</span>
+                        <span class="bg-white/90 text-gray-800 text-xs px-2 py-1 rounded-full font-medium">Remote</span>
+                    </div>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold text-gray-900" data-bind="profile.name">Alex Chen</h3>
+                        <span class="text-lg text-gray-600" data-bind="profile.age">28</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-3" data-bind="profile.title">Senior Full-Stack Developer</p>
+                    
+                    <!-- Tech Stack -->
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">React</span>
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">Node.js</span>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">JavaScript</span>
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">PostgreSQL</span>
+                    </div>
+
+                    <!-- Project Interest -->
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <h4 class="text-sm font-semibold text-gray-900 mb-1">Current Interest</h4>
+                        <p class="text-sm text-gray-700">Building a real-time collaboration tool for remote teams. Looking for UX/UI designer and backend specialist.</p>
+                    </div>
+
+                    <!-- Collaboration Type -->
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-500">Seeking:</span>
+                        <span class="font-medium text-primary">Long-term Partnership</span>
+                    </div>
+                </div>
+
+                <!-- Swipe Indicators -->
+                <div class="swipe-indicator absolute inset-0 flex items-center justify-center pointer-events-none opacity-0" id="likeIndicator">
+                    <div class="bg-accent text-white px-6 py-3 rounded-full font-bold text-lg transform rotate-12">
+                        <i class="fas fa-heart mr-2"></i>MATCH!
+                    </div>
+                </div>
+                <div class="swipe-indicator absolute inset-0 flex items-center justify-center pointer-events-none opacity-0" id="passIndicator">
+                    <div class="bg-danger text-white px-6 py-3 rounded-full font-bold text-lg transform -rotate-12">
+                        <i class="fas fa-times mr-2"></i>PASS
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: CardStack -->
+
+        <!-- Action Buttons -->
+        <!-- @COMPONENT: ActionButtons -->
+        <div class="flex justify-center items-center gap-6 p-6">
+            <button class="w-14 h-14 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-danger hover:text-danger transition-all shadow-lg hover:shadow-xl" 
+                    data-event="click:handlePass">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <button class="w-12 h-12 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center text-gray-500 hover:border-warning hover:text-warning transition-all shadow-md" 
+                    data-event="click:handleSuperLike">
+                <i class="fas fa-star text-lg"></i>
+            </button>
+            
+            <button class="w-14 h-14 bg-accent border-2 border-accent rounded-full flex items-center justify-center text-white hover:bg-green-600 hover:border-green-600 transition-all shadow-lg hover:shadow-xl" 
+                    data-event="click:handleLike">
+                <i class="fas fa-heart text-xl"></i>
+            </button>
+        </div>
+        <!-- @END_COMPONENT: ActionButtons -->
+
+        <!-- Bottom Navigation -->
+        <!-- @COMPONENT: BottomNavigation -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+            <div class="flex justify-around items-center">
+                <button class="flex flex-col items-center gap-1 text-primary" data-state="active">
+                    <i class="fas fa-layer-group text-xl"></i>
+                    <span class="text-xs font-medium">Discover</span>
+                </button>
+                <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-heart text-xl"></i>
+                    <span class="text-xs">Matches</span>
+                </button>
+                <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-comments text-xl"></i>
+                    <span class="text-xs">Chat</span>
+                </button>
+                <button class="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-user text-xl"></i>
+                    <span class="text-xs">Profile</span>
+                </button>
+            </div>
+        </nav>
+        <!-- @END_COMPONENT: BottomNavigation -->
+
+        <!-- Match Modal (Hidden by default) -->
+        <!-- @COMPONENT: MatchModal -->
+        <div class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity" id="matchModal">
+            <div class="bg-white rounded-2xl p-6 text-center max-w-sm w-full">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">It's a Match!</h2>
+                <p class="text-gray-600 mb-6">You and Alex both want to collaborate. Start the conversation!</p>
+                
+                <div class="flex gap-3">
+                    <button class="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                        Keep Swiping
+                    </button>
+                    <button class="flex-1 py-3 px-4 bg-primary text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                        Send Message
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: MatchModal -->
+
+        <!-- Profile Detail Modal (Hidden by default) -->
+        <!-- @COMPONENT: ProfileDetailModal -->
+        <div class="fixed inset-0 bg-white z-40 transform translate-y-full transition-transform" id="profileModal">
+            <div class="h-full overflow-y-auto">
+                <!-- Header -->
+                <div class="gradient-bg p-4 text-white">
+                    <div class="flex items-center justify-between">
+                        <button class="p-2 hover:bg-white/20 rounded-lg transition-colors" data-event="click:closeProfileModal">
+                            <i class="fas fa-arrow-left text-xl"></i>
+                        </button>
+                        <h2 class="text-lg font-semibold">Profile Details</h2>
+                        <button class="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                            <i class="fas fa-share-alt text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="p-4">
+                    <!-- Profile Header -->
+                    <!-- A close-up of hands typing on a mechanical keyboard with code on screen -->
+                    <div class="relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" 
+                             alt="Developer hands typing on mechanical keyboard" 
+                             class="w-full h-48 object-cover rounded-xl">
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-2xl font-bold">Alex Chen</h3>
+                            <p class="text-lg opacity-90">Senior Full-Stack Developer</p>
+                        </div>
+                    </div>
+
+                    <!-- About -->
+                    <section class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">About</h4>
+                        <p class="text-gray-700 leading-relaxed">
+                            Passionate full-stack developer with 6+ years of experience building scalable web applications. 
+                            I love creating user-centric solutions and am always excited to collaborate on innovative projects.
+                        </p>
+                    </section>
+
+                    <!-- Skills -->
+                    <section class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Tech Stack</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <h5 class="font-medium text-blue-900 mb-2">Frontend</h5>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Vue.js</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">TypeScript</span>
+                                </div>
+                            </div>
+                            <div class="bg-green-50 p-3 rounded-lg">
+                                <h5 class="font-medium text-green-900 mb-2">Backend</h5>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Node.js</span>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Python</span>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">GraphQL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Current Projects -->
+                    <section class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Current Projects</h4>
+                        <div class="space-y-3">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="font-medium text-gray-900">CollabSpace</h5>
+                                    <span class="bg-accent text-white text-xs px-2 py-1 rounded-full">Active</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">Real-time collaboration platform for remote teams</p>
+                                <div class="flex gap-2">
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">React</span>
+                                    <span class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">Socket.io</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Preferences -->
+                    <section class="mb-6">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Collaboration Preferences</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <div class="text-2xl mb-1">🕐</div>
+                                <p class="text-sm font-medium text-gray-900">Availability</p>
+                                <p class="text-xs text-gray-600">Weekends + Evenings</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl mb-1">🌍</div>
+                                <p class="text-sm font-medium text-gray-900">Location</p>
+                                <p class="text-xs text-gray-600">Remote Preferred</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl mb-1">⚡</div>
+                                <p class="text-sm font-medium text-gray-900">Commitment</p>
+                                <p class="text-xs text-gray-600">Long-term</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl mb-1">💡</div>
+                                <p class="text-sm font-medium text-gray-900">Focus</p>
+                                <p class="text-xs text-gray-600">Product Development</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="p-4 border-t border-gray-200">
+                    <div class="flex gap-3">
+                        <button class="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-times mr-2"></i>Pass
+                        </button>
+                        <button class="flex-1 py-3 px-4 bg-accent text-white rounded-lg font-medium hover:bg-green-600 transition-colors">
+                            <i class="fas fa-heart mr-2"></i>Like
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ProfileDetailModal -->
+
+        <!-- Tool Profile Card Example (Hidden by default) -->
+        <!-- @COMPONENT: ToolProfileCard -->
+        <div class="hidden card absolute inset-4 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden" id="toolCard">
+            <!-- Tool Icon/Image -->
+            <!-- A modern development setup with Visual Studio Code on screen -->
+            <div class="h-48 bg-gradient-to-br from-blue-600 to-blue-800 relative overflow-hidden flex items-center justify-center">
+                <div class="text-white text-center">
+                    <i class="fab fa-github text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-bold">GitHub</h3>
+                </div>
+                <div class="absolute top-3 right-3 flex gap-2">
+                    <span class="bg-accent text-white text-xs px-2 py-1 rounded-full font-medium">Free</span>
+                    <span class="bg-white/90 text-gray-800 text-xs px-2 py-1 rounded-full font-medium">Web</span>
+                </div>
+            </div>
+
+            <!-- Tool Info -->
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-gray-900">GitHub</h3>
+                    <span class="text-sm text-gray-600">Version Control</span>
+                </div>
+                
+                <p class="text-sm text-gray-600 mb-3">Platform for version control and collaboration</p>
+                
+                <!-- Integration Tags -->
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium">Git</span>
+                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">CI/CD</span>
+                    <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">API</span>
+                    <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">Webhooks</span>
+                </div>
+
+                <!-- Compatibility -->
+                <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-1">Best Integrations</h4>
+                    <p class="text-sm text-gray-700">Works seamlessly with VS Code, Slack, Jira, and most CI/CD platforms</p>
+                </div>
+
+                <!-- Usage Stats -->
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-500">Compatibility:</span>
+                    <span class="font-medium text-accent">95% with your stack</span>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ToolProfileCard -->
+    </div>
+    <!-- @END_COMPONENT: AppContainer -->
+
+    <script>
+        // TODO: Implement actual swipe gesture handling, card state management, and API integration
+        (function() {
+            // Mock interaction handlers for demonstration
+            let currentCardIndex = 0;
+            const cards = ['developer', 'tool']; // Mock card types
+            
+            // Handle card actions
+            function handleLike() {
+                showSwipeIndicator('like');
+                setTimeout(() => {
+                    nextCard();
+                    // TODO: Send like action to backend API
+                }, 500);
+            }
+            
+            function handlePass() {
+                showSwipeIndicator('pass');
+                setTimeout(() => {
+                    nextCard();
+                    // TODO: Send pass action to backend API
+                }, 500);
+            }
+            
+            function handleSuperLike() {
+                // TODO: Implement super like functionality
+                console.log('Super like clicked');
+            }
+            
+            function showSwipeIndicator(type) {
+                const indicator = document.getElementById(type === 'like' ? 'likeIndicator' : 'passIndicator');
+                indicator.style.opacity = '1';
+                setTimeout(() => {
+                    indicator.style.opacity = '0';
+                }, 500);
+            }
+            
+            function nextCard() {
+                // TODO: Load next card from API
+                console.log('Loading next card...');
+            }
+            
+            function showMatchModal() {
+                const modal = document.getElementById('matchModal');
+                modal.style.opacity = '1';
+                modal.style.pointerEvents = 'auto';
+            }
+            
+            function hideMatchModal() {
+                const modal = document.getElementById('matchModal');
+                modal.style.opacity = '0';
+                modal.style.pointerEvents = 'none';
+            }
+            
+            // Event listeners for demonstration
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('[data-event]');
+                if (!target) return;
+                
+                const action = target.getAttribute('data-event').split(':')[1];
+                switch(action) {
+                    case 'handleLike':
+                        handleLike();
+                        // Simulate match (20% chance for demo)
+                        if (Math.random() < 0.2) {
+                            setTimeout(showMatchModal, 1000);
+                        }
+                        break;
+                    case 'handlePass':
+                        handlePass();
+                        break;
+                    case 'handleSuperLike':
+                        handleSuperLike();
+                        break;
+                }
+            });
+            
+            // Hide match modal on click outside
+            document.getElementById('matchModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideMatchModal();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

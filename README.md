@@ -14,7 +14,7 @@
 
 </div>
 
----
+--- 
 
 ## ✨ What is DevConnect?
 
