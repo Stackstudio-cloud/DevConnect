@@ -1,7 +1,7 @@
-// DevMatch PWA Service Worker
-const CACHE_NAME = 'devmatch-v1.0.0';
-const STATIC_CACHE = 'devmatch-static-v1.0.0';
-const DYNAMIC_CACHE = 'devmatch-dynamic-v1.0.0';
+// DevConnect PWA Service Worker
+const CACHE_NAME = 'devconnect-v1.0.0';
+const STATIC_CACHE = 'devconnect-static-v1.0.0';
+const DYNAMIC_CACHE = 'devconnect-dynamic-v1.0.0';
 
 // Critical resources to cache immediately
 const STATIC_ASSETS = [
@@ -206,7 +206,7 @@ self.addEventListener('push', (event) => {
     body: data.body || 'You have a new notification',
     icon: '/icon-192x192.png',
     badge: '/icon-72x72.png',
-    tag: data.tag || 'devmatch-notification',
+    tag: data.tag || 'devconnect-notification',
     requireInteraction: data.requireInteraction || false,
     actions: data.actions || [
       {
@@ -223,7 +223,7 @@ self.addEventListener('push', (event) => {
   };
   
   event.waitUntil(
-    self.registration.showNotification(data.title || 'DevMatch', options)
+    self.registration.showNotification(data.title || 'DevConnect', options)
   );
 });
 
@@ -241,7 +241,7 @@ self.addEventListener('notificationclick', (event) => {
       .then((clientList) => {
         // If app is already open, focus it
         for (const client of clientList) {
-          if (client.url.includes('devmatch') && 'focus' in client) {
+          if (client.url.includes('devconnect') && 'focus' in client) {
             if (action === 'view' && data.url) {
               client.navigate(data.url);
             }

@@ -1,8 +1,8 @@
-# DevMatch - Developer & Tool Discovery Platform
+# DevConnect - Developer & Tool Discovery Platform
 
 ## Overview
 
-DevMatch is a Tinder-like application for developers to find collaboration partners and discover development tools. It features a swipe-based interface for matching developers with other developers or exploring development tools that fit their tech stack.
+DevConnect is a Tinder-like application for developers to find collaboration partners and discover development tools. It features a swipe-based interface for matching developers with other developers or exploring development tools that fit their tech stack.
 
 ## User Preferences
 
@@ -184,4 +184,4 @@ The platform is now positioned for immediate market launch with comprehensive fe
 - Added MIT LICENSE for open-source distribution
 - Documented complete tech stack, architecture, and deployment strategies
 - Included performance metrics, roadmap, and support information
-- Added landing page screenshot showcasing the beautiful DevMatch interface
+- Added landing page screenshot showcasing the beautiful DevConnect interface

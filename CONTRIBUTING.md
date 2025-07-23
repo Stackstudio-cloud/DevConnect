@@ -1,6 +1,6 @@
-# Contributing to DevMatch
+# Contributing to DevConnect
 
-Thank you for your interest in contributing to DevMatch! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to DevConnect! This document provides guidelines and information for contributors.
 
 ## 🤝 How to Contribute
 
@@ -16,9 +16,9 @@ Thank you for your interest in contributing to DevMatch! This document provides 
 
 ### 1. Fork and Clone
 ```bash
-git fork https://github.com/your-username/devmatch.git
-git clone https://github.com/your-username/devmatch.git
-cd devmatch
+git fork https://github.com/your-username/devconnect.git
+git clone https://github.com/your-username/devconnect.git
+cd devconnect
 ```
 
 ### 2. Set Up Development Environment
@@ -102,7 +102,7 @@ Use the feature request template and include:
 
 ### Project Structure
 ```
-devmatch/
+devconnect/
 ├── client/          # React frontend
 ├── server/          # Express backend
 ├── shared/          # Shared types and schemas
@@ -120,7 +120,7 @@ devmatch/
 
 ### API Documentation
 - **OpenAPI Spec**: `/docs/api.yaml`
-- **Postman Collection**: `/docs/devmatch.postman_collection.json`
+- **Postman Collection**: `/docs/devconnect.postman_collection.json`
 - **Database Schema**: `/docs/database-schema.md`
 
 ## 🔧 Local Development
@@ -156,14 +156,14 @@ Contributors will be:
 
 ## 📞 Getting Help
 
-- **Discord**: [Join our community](https://discord.gg/devmatch)
-- **GitHub Discussions**: [Ask questions](https://github.com/your-username/devmatch/discussions)
-- **Email**: contributors@devmatch.app
+- **Discord**: [Join our community](https://discord.gg/devconnect)
+- **GitHub Discussions**: [Ask questions](https://github.com/your-username/devconnect/discussions)
+- **Email**: contributors@devconnect.app
 
 ## 📄 License
 
-By contributing to DevMatch, you agree that your contributions will be licensed under the MIT License.
+By contributing to DevConnect, you agree that your contributions will be licensed under the MIT License.
 
 ---
 
-**Thank you for making DevMatch better! 🚀**
+**Thank you for making DevConnect better! 🚀**

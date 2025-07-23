@@ -1,27 +1,27 @@
-# DevMatch - Developer Collaboration Platform
+# DevConnect - Developer Collaboration Platform
 
 <div align="center">
 
-![DevMatch Screenshot](attached_assets/image_1753234085929.png)
+![DevConnect Screenshot](attached_assets/image_1753234085929.png)
 
 **Connect, collaborate, and build amazing projects with developers worldwide**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available-success?style=for-the-badge)](https://devmatch.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available-success?style=for-the-badge)](https://devconnect.app)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-100%25-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
-[🚀 Live Demo](https://devmatch.app) • [📖 Documentation](docs/) • [💡 Features](#features) • [🛠️ Tech Stack](#tech-stack)
+[🚀 Live Demo](https://devconnect.app) • [📖 Documentation](docs/) • [💡 Features](#features) • [🛠️ Tech Stack](#tech-stack)
 
 </div>
 
 ---
 
-## ✨ What is DevMatch?
+## ✨ What is DevConnect?
 
-DevMatch is a **cutting-edge developer collaboration platform** that combines the intuitive swipe-based matching of modern dating apps with powerful AI-driven recommendations to connect developers, foster team formation, and accelerate project success.
+DevConnect is a **cutting-edge developer collaboration platform** that combines the intuitive swipe-based matching of modern dating apps with powerful AI-driven recommendations to connect developers, foster team formation, and accelerate project success.
 
 <div align="center">
-alt="DevMatch Landing Page" width="600" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);"/>
+<img src="attached_assets/image_1753234085929.png" alt="DevConnect Landing Page" width="600" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);"/>
 
 *Beautiful, intuitive interface designed for developers*
 </div>
@@ -109,63 +109,6 @@ alt="DevMatch Landing Page" width="600" style="border-radius: 12px; box-shadow: 
 
 ---
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ 
-- PostgreSQL database
-- Replit account (for authentication)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/devmatch.git
-   cd devmatch
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Initialize the database**
-   ```bash
-   npm run db:push
-   ```
-
-5. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-6. **Open your browser**
-   Navigate to `http://localhost:5000`
-
-### Environment Variables
-
-```env
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/devmatch
-
-# Authentication
-SESSION_SECRET=your-session-secret
-REPL_ID=your-replit-id
-ISSUER_URL=https://replit.com/oidc
-REPLIT_DOMAINS=your-domain.com
-
-# Optional
-NODE_ENV=development
-```
-
----
-
 ## 📱 Usage
 
 ### For Developers
@@ -215,25 +158,6 @@ NODE_ENV=development
 
 ---
 
-## 🧪 Testing
-
-Run the test suite:
-```bash
-npm test
-```
-
-Run tests with coverage:
-```bash
-npm run test:coverage
-```
-
-Run E2E tests:
-```bash
-npm run test:e2e
-```
-
----
-
 ## 📊 Performance
 
 ### Metrics
@@ -262,15 +186,15 @@ npm start
 
 ### Docker Deployment
 ```bash
-docker build -t devmatch .
-docker run -p 5000:5000 devmatch
+docker build -t devconnect .
+docker run -p 5000:5000 devconnect
 ```
 
 ### Environment Setup
 The application is optimized for deployment on:
-- **Replit** (recommended)
 - **Vercel**
 - **Netlify**
+- **Replit**
 - **AWS**
 - **Google Cloud Platform**
 
@@ -305,19 +229,17 @@ This project is licensed under the [MIT License](LICENSE) - see the LICENSE file
 
 ## 🎯 Roadmap
 
-### Q1 2025
+### Q3 2025
 - [ ] Mobile app development (React Native)
 - [ ] Real-time code collaboration
 - [ ] Advanced search with Elasticsearch
 - [ ] Video chat integration
-
-### Q2 2025
 - [ ] Enterprise dashboard
 - [ ] API marketplace
 - [ ] Blockchain-based reputation system
 - [ ] AI code generation assistance
 
-### Q3 2025
+### Q4 2025
 - [ ] Global localization
 - [ ] Industry-specific verticals
 - [ ] AR/VR collaboration features
@@ -327,10 +249,10 @@ This project is licensed under the [MIT License](LICENSE) - see the LICENSE file
 
 ## 📞 Support
 
-- **Documentation**: [docs.devmatch.app](https://docs.devmatch.app)
-- **Issues**: [GitHub Issues](https://github.com/your-username/devmatch/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/devmatch/discussions)
-- **Email**: support@devmatch.app
+- **Documentation**: [docs.devconnect.app](https://docs.devconnect.app)
+- **Issues**: [GitHub Issues](https://github.com/your-username/devconnect/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/devconnect/discussions)
+- **Email**: support@devconnect.app
 
 ---
 
@@ -345,11 +267,11 @@ This project is licensed under the [MIT License](LICENSE) - see the LICENSE file
 
 <div align="center">
 
-**Made with ❤️ by the DevMatch Team**
+**Made with ❤️ by the DevConnect Team**
 
-[![GitHub Stars](https://img.shields.io/github/stars/your-username/devmatch?style=social)](https://github.com/your-username/devmatch/stargazers)
-[![Twitter Follow](https://img.shields.io/twitter/follow/devmatch?style=social)](https://twitter.com/devmatch)
+[![GitHub Stars](https://img.shields.io/github/stars/your-username/devconnect?style=social)](https://github.com/your-username/devconnect/stargazers)
+[![Twitter Follow](https://img.shields.io/twitter/follow/devconnect?style=social)](https://twitter.com/devconnect)
 
-[⭐ Star this repo](https://github.com/your-username/devmatch) • [🐛 Report Bug](https://github.com/your-username/devmatch/issues) • [💡 Request Feature](https://github.com/your-username/devmatch/issues)
+[⭐ Star this repo](https://github.com/your-username/devconnect) • [🐛 Report Bug](https://github.com/your-username/devconnect/issues) • [💡 Request Feature](https://github.com/your-username/devconnect/issues)
 
 </div>
