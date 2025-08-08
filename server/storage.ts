@@ -51,6 +51,7 @@ export interface IStorage {
   createMatch(user1Id: string, user2Id: string): Promise<Match>;
   getMatches(userId: string): Promise<(Match & { user1: User; user2: User })[]>;
   checkMatch(user1Id: string, user2Id: string): Promise<Match | undefined>;
+  getMatchById(matchId: number): Promise<Match | undefined>;
   
   // Message operations
   getMessagesByMatch(matchId: number): Promise<(Message & { sender: User })[]>;
@@ -371,6 +372,14 @@ export class DatabaseStorage implements IStorage {
         and(eq(matches.user1Id, user1Id), eq(matches.user2Id, user2Id)),
         and(eq(matches.user1Id, user2Id), eq(matches.user2Id, user1Id))
       ));
+    return match;
+  }
+
+  async getMatchById(matchId: number): Promise<Match | undefined> {
+    const [match] = await db
+      .select()
+      .from(matches)
+      .where(eq(matches.id, matchId));
     return match;
   }
 

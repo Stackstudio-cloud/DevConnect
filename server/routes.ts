@@ -2,21 +2,26 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
+import signature from "cookie-signature";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { setupGitHubAuth } from "./githubAuth";
 import { setupTwitterAuth } from "./twitterAuth";
+import { setupGoogleAuth } from "./googleAuth";
+import passport from "passport";
 import {
   insertDeveloperProfileSchema,
   insertProjectSchema,
   insertSwipeSchema,
   insertMessageSchema,
 } from "@shared/schema";
+import { enqueueUrl } from "./qstash";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
   setupGitHubAuth();
   setupTwitterAuth();
+  setupGoogleAuth();
 
   // GitHub Auth routes
   app.get('/api/auth/github', (req, res, next) => {
@@ -29,6 +34,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Twitter Auth routes  
+  // Google OAuth routes (active when env set)
+  app.get('/api/auth/google', (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID) return res.redirect('/?auth_demo=google');
+    passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+  });
+  app.get('/api/auth/google/callback', (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID) return res.redirect('/?auth_demo=google_callback');
+    passport.authenticate('google', (err, user) => {
+      if (err || !user) return res.redirect('/?login=failed');
+      req.logIn(user, (err2) => {
+        if (err2) return res.redirect('/?login=failed');
+        res.redirect('/');
+      });
+    })(req, res, next);
+  });
   app.get('/api/auth/twitter', (req, res, next) => {
     // Redirect to placeholder page for Twitter auth setup
     res.redirect('/?auth_demo=twitter');
@@ -110,6 +130,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Tool details route
+  app.get('/api/tools/:toolId', isAuthenticated, async (req: any, res) => {
+    try {
+      const toolId = parseInt(req.params.toolId);
+      const tool = await storage.getToolProfile(toolId);
+      if (!tool) return res.status(404).json({ message: 'Tool not found' });
+      res.json(tool);
+    } catch (error) {
+      console.error('Error fetching tool:', error);
+      res.status(500).json({ message: 'Failed to fetch tool' });
+    }
+  });
+
   // Swipe routes
   app.post('/api/swipe', isAuthenticated, async (req: any, res) => {
     try {
@@ -172,10 +205,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const matchId = parseInt(req.params.matchId);
-      
       // Verify user is part of this match
-      const match = await storage.checkMatch(userId, userId); // This needs to be fixed
+      const match = await storage.getMatchById(matchId);
       if (!match) {
+        return res.status(403).json({ message: "Not authorized to view these messages" });
+      }
+      if (match.user1Id !== userId && match.user2Id !== userId) {
         return res.status(403).json({ message: "Not authorized to view these messages" });
       }
 
@@ -196,6 +231,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const matchId = parseInt(req.params.matchId);
       
+      // Verify membership
+      const match = await storage.getMatchById(matchId);
+      if (!match || (match.user1Id !== userId && match.user2Id !== userId)) {
+        return res.status(403).json({ message: "Not authorized to send messages to this match" });
+      }
+
       const messageData = insertMessageSchema.parse({
         ...req.body,
         matchId,
@@ -207,6 +248,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error sending message:", error);
       res.status(500).json({ message: "Failed to send message" });
+    }
+  });
+
+  // WebSocket token endpoint (signed with SESSION_SECRET)
+  app.get('/api/ws/token', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const matchId = parseInt(req.query.matchId as string);
+      if (!Number.isFinite(matchId)) return res.status(400).json({ message: 'Invalid matchId' });
+      const match = await storage.getMatchById(matchId);
+      if (!match || (match.user1Id !== userId && match.user2Id !== userId)) {
+        return res.status(403).json({ message: 'Not authorized for this match' });
+      }
+      const raw = `${userId}:${matchId}`;
+      const token = signature.sign(raw, process.env.SESSION_SECRET!);
+      res.json({ token, userId, matchId });
+    } catch (error) {
+      console.error('Error creating ws token:', error);
+      res.status(500).json({ message: 'Failed to create token' });
     }
   });
 
@@ -237,6 +297,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const project = await storage.createProject(projectData);
+      // enqueue post-create processing (e.g., notify followers)
+      await enqueueUrl(`${req.protocol}://${req.get('host')}/api/hooks/project-created`, {
+        projectId: project.id,
+        developerId: project.developerId,
+      });
       res.json(project);
     } catch (error) {
       console.error("Error creating project:", error);
@@ -244,23 +309,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // webhook to accept qstash jobs (should be signed verification in prod)
+  app.post('/api/hooks/project-created', async (req, res) => {
+    // placeholder: do async processing, send emails, recompute rankings, etc
+    res.json({ ok: true });
+  });
+
   const httpServer = createServer(app);
 
   // WebSocket server for real-time messaging
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 
-  wss.on('connection', (ws: WebSocket, req) => {
-    console.log('New WebSocket connection');
+  // Simple room-based broadcast with auth by match membership
+  wss.on('connection', async (ws: WebSocket, req) => {
+    const url = new URL(req.url || '', `http://${req.headers.host}`);
+    let room = 0;
+    let userId = '';
+
+    const token = url.searchParams.get('token');
+    if (token) {
+      try {
+        const unsigned = signature.unsign(token, process.env.SESSION_SECRET!);
+        if (!unsigned) throw new Error('invalid token');
+        const [uid, matchStr] = unsigned.split(':');
+        userId = uid;
+        const maybeRoom = parseInt(matchStr);
+        room = Number.isFinite(maybeRoom) ? maybeRoom : 0;
+      } catch (err) {
+        console.warn('WS token verification failed');
+      }
+    } else {
+      // Fallback: legacy query params (less secure)
+      const matchId = parseInt(url.searchParams.get('matchId') || '0');
+      userId = url.searchParams.get('userId') || '';
+      room = Number.isFinite(matchId) ? matchId : 0;
+    }
+
+    (ws as any).room = room;
+    (ws as any).userId = userId;
+    console.log('New WebSocket connection', { matchId: room, userId });
 
     ws.on('message', (message) => {
       try {
         const data = JSON.parse(message.toString());
-        
-        // Broadcast message to other clients in the same match
-        if (data.type === 'chat_message') {
+        // Only allow chat messages scoped to the same room
+        if (data.type === 'chat_message' && (ws as any).room && data.matchId === (ws as any).room) {
           wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-              client.send(JSON.stringify(data));
+            if (
+              client !== ws &&
+              (client as any).room === (ws as any).room &&
+              client.readyState === WebSocket.OPEN
+            ) {
+              client.send(JSON.stringify({ ...data, serverTimestamp: Date.now() }));
             }
           });
         }

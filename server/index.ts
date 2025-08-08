@@ -1,10 +1,32 @@
 import express, { type Request, Response, NextFunction } from "express";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import swaggerUi from "swagger-ui-express";
+import { openapiSpec } from "./openapi";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// Security
+app.use(
+  helmet({
+    contentSecurityPolicy: process.env.NODE_ENV === "production" ? undefined : false,
+  }),
+);
+// Basic API rate limiting
+app.use(
+  "/api",
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+  }),
+);
+// API Docs
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
 app.use((req, res, next) => {
   const start = Date.now();
